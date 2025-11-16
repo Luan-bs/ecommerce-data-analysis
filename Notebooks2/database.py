@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text
 import warnings
 warnings.filterwarnings('ignore')
 
-print("✓ Bibliotecas importadas com sucesso")
+print("Bibliotecas importadas com sucesso")
 
 DB_TYPE = 'postgresql'  
 
@@ -23,22 +23,22 @@ elif DB_TYPE == 'mysql':
 else:
     raise ValueError("DB_TYPE deve ser 'postgresql' ou 'mysql'")
 
-print(f"✓ Configuração definida para: {DB_TYPE.upper()}")
-print(f"✓ String de conexão: {connection_string.replace(DB_PASSWORD, '***')}")
+print(f"Configuração definida para: {DB_TYPE.upper()}")
+print(f"String de conexão: {connection_string.replace(DB_PASSWORD, '***')}")
 
 try:
     engine = create_engine(connection_string)
     
     with engine.connect() as conn:
         result = conn.execute(text("SELECT 1"))
-        print("✓ Conexão estabelecida com sucesso!")
-        print(f"✓ Banco de dados: {DB_NAME}")
-        print(f"✓ Tipo: {DB_TYPE.upper()}")
+        print("Conexão estabelecida com sucesso!")
+        print(f"Banco de dados: {DB_NAME}")
+        print(f"Tipo: {DB_TYPE.upper()}")
         
 except Exception as e:
-    print(f"✗ Erro ao conectar ao banco de dados:")
+    print(f"Erro ao conectar ao banco de dados:")
     print(f"  {str(e)}")
-    print("\n💡 Dicas:")
+    print("\n Dicas:")
     print("  1. Verifique se o servidor do banco está rodando")
     print("  2. Confirme usuário e senha")
     print("  3. Certifique-se que o banco de dados existe")
@@ -91,8 +91,8 @@ CREATE TABLE dim_product (
 );
 """
 
-print("✓ Script SQL de criação das dimensões preparado")
-print(f"✓ Total de linhas SQL: {len(sql_create_dimensions.split(chr(10)))}")
+print("Script SQL de criação das dimensões preparado")
+print(f"Total de linhas SQL: {len(sql_create_dimensions.split(chr(10)))}")
 
 # ==========================================
 #     SQL: CRIAR TABELA FATO
@@ -126,8 +126,8 @@ CREATE INDEX idx_fact_total_price ON fact_sales(total_price);
 CREATE INDEX idx_fact_invoice_date ON fact_sales(invoice_no, date_id);
 """
 
-print("✓ Script SQL de criação da tabela fato preparado")
-print(f"✓ Total de linhas SQL: {len(sql_create_fact.split(chr(10)))}")
+print("Script SQL de criação da tabela fato preparado")
+print(f"Total de linhas SQL: {len(sql_create_fact.split(chr(10)))}")
 
 # ==========================================
 #     SQL: CRIAR TABELA DE MÉTRICAS
@@ -153,8 +153,8 @@ CREATE INDEX idx_metrics_country ON metrics(country);
 CREATE INDEX idx_metrics_revenue ON metrics(total_revenue);
 """
 
-print("✓ Script SQL de criação da tabela de métricas preparado")
-print(f"✓ Total de linhas SQL: {len(sql_create_metrics.split(chr(10)))}")
+print("Script SQL de criação da tabela de métricas preparado")
+print(f"Total de linhas SQL: {len(sql_create_metrics.split(chr(10)))}")
 
 # ==========================================
 #     EXECUTAR SCRIPTS SQL
@@ -165,24 +165,24 @@ try:
         print("Executando criação das tabelas dimensionais...")
         conn.execute(text(sql_create_dimensions))
         conn.commit()
-        print("✓ Tabelas dimensionais criadas com sucesso!")
+        print("Tabelas dimensionais criadas com sucesso!")
         
         print("\nExecutando criação da tabela fato...")
         conn.execute(text(sql_create_fact))
         conn.commit()
-        print("✓ Tabela fato criada com sucesso!")
+        print("Tabela fato criada com sucesso!")
         
         print("\nExecutando criação da tabela de métricas...")
         conn.execute(text(sql_create_metrics))
         conn.commit()
-        print("✓ Tabela de métricas criada com sucesso!")
+        print("Tabela de métricas criada com sucesso!")
         
         print("\n" + "="*60)
-        print("✓✓✓ SCHEMA DO BANCO DE DADOS CRIADO COM SUCESSO! ✓✓✓")
+        print("✓✓SCHEMA DO BANCO DE DADOS CRIADO COM SUCESSO! ✓✓✓")
         print("="*60)
         
 except Exception as e:
-    print(f"✗ Erro ao criar schema:")
+    print(f"Erro ao criar schema:")
     print(f"  {str(e)}")
 
 # ==========================================
@@ -212,7 +212,7 @@ try:
         print("="*60)
         print(result.to_string(index=False))
         print("="*60)
-        print(f"\n✓ Total de tabelas: {len(result)}")
+        print(f"\nTotal de tabelas: {len(result)}")
         
         # Verificar se todas as tabelas esperadas foram criadas
         expected_tables = ['dim_country', 'dim_customer', 'dim_date', 'dim_product', 
@@ -225,7 +225,7 @@ try:
             print(f"  {status} {table}")
             
 except Exception as e:
-    print(f"✗ Erro ao listar tabelas:")
+    print(f"Erro ao listar tabelas:")
     print(f"  {str(e)}")
 
 # ==========================================
@@ -258,7 +258,7 @@ def describe_table(table_name):
             print(result.to_string(index=False))
             print("="*80)
     except Exception as e:
-        print(f"✗ Erro ao descrever tabela {table_name}: {str(e)}")
+        print(f"Erro ao descrever tabela {table_name}: {str(e)}")
 
 tables_to_describe = ['dim_country', 'dim_customer', 'dim_date', 'dim_product', 
                       'fact_sales', 'metrics']
