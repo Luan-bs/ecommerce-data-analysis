@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Camada Silver - Limpeza e Transformação de Dados
 # 
 # Este notebook implementa a **segunda camada do pipeline** (Silver Layer), onde realizamos a limpeza e transformação dos dados brutos.
@@ -15,11 +12,15 @@
 # ## Processo:
 # Os dados da camada Bronze são carregados, tratados e salvos na camada Silver em formato otimizado.
 
-# In[1]:
-
 
 import pandas as pd
 import os
+from datetime import datetime
+import time
+import csv
+
+# medir tempo
+inicio = time.time()
 
 # Definindo o diretório base para os dados (deve ser o mesmo do 01_bronze_layer.py)
 BASE_DIR = "/opt/airflow/dags"
@@ -41,17 +42,9 @@ df_clean = df.copy()
 
 # ### CustomerID
 
-
-# 
-# 
 # *   CustomerID	| 135.080 Rows NaN
-# 
-# ---
-# 
-# 
-# Checando a possibilidade de tratar CustomerID NaN de acordo com InvoiceNo (Nº da fatura) iguais e com CustomerID preenchido
 
-# In[2]:
+# Checando a possibilidade de tratar CustomerID NaN de acordo com InvoiceNo (Nº da fatura) iguais e com CustomerID preenchido
 
 
 # Contar quantos InvoiceNo possuem pelo menos um CustomerID nulo
@@ -82,14 +75,8 @@ print(f"Total de linhas com CustomerID nulo: {df['CustomerID'].isnull().sum()}")
 # 
 #  Muitos Description possuem erros de preenchimento também
 # 
-# ---
-# 
-# 
-# 
+
 # Cada produto possui o seu StockCode. Muitos Description (nome do produto) estão NaN ou preenchidos de forma errada, porém possuem StockCode iguais
-
-# In[3]:
-
 
 # Contar quantos StockCode possuem pelo menos um Description nulo
 StockCode_null = df.groupby('StockCode')['Description'].apply(lambda x: x.isnull().any())
@@ -114,8 +101,6 @@ print(f"Quantidade de Description NaN do StockCode 35965: {df[df['StockCode'] ==
 # 
 # Verificamos se é possível recuperar descrições de produtos usando o StockCode como referência. Como cada StockCode representa um produto específico, podemos usar o primeiro valor válido encontrado para preencher os demais.
 
-# In[4]:
-
 
 # Criar mapeamento de StockCode  Description válida
 mapa_descricoes = df_clean.dropna(subset=['Description']).groupby('StockCode')['Description'].first().to_dict()
@@ -139,7 +124,6 @@ print(f"Quantidade de Descriptions erradas corrigidas: {df['Description'].nuniqu
 
 #  Duplicatas são aceitáveis no modelo de negócio deste DataFrame. Cada linha representa um item em uma fatura, portanto, o mesmo `InvoiceNo` (número da fatura) pode aparecer várias vezes se uma fatura contiver múltiplos produtos. A venda em si é representada unicamente pelo `InvoiceNo`.
 
-# In[5]:
 
 
 print(f"Quantidade de linhas duplicadas: {df_clean.duplicated().sum()}")
@@ -257,3 +241,27 @@ print("Dados salvos na camada Silver")
 # ### Salvamento dos Dados Limpos
 # 
 # Os dados tratados são salvos na camada Silver, prontos para serem modelados na camada Gold.
+# =============================
+# LOG DO PIPELINE (silver)
+# =============================
+
+fim = time.time()
+duracao = fim - inicio
+registros = df_clean.shape[0]
+
+log_file = f"{BASE_DIR}/logs_pipeline.csv"
+
+log = [
+    datetime.now(),   # data_execucao
+    "silver",         # camada
+    "sucesso",        # status
+    round(duracao, 2),
+    registros
+]
+
+# salva o log
+with open(log_file, "a", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(log)
+
+print("Log registrado no arquivo logs_pipeline.csv")

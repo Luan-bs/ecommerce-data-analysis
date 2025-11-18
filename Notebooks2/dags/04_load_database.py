@@ -36,6 +36,12 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import warnings
 import os
+from datetime import datetime
+import time
+import csv
+
+#medir tempo
+inicio = time.time()
 
 warnings.filterwarnings('ignore')
 
@@ -462,6 +468,32 @@ tables_to_describe = ['dim_country', 'dim_customer', 'dim_date', 'dim_product',
 for table in tables_to_describe:
     describe_table(table)
 
+# =============================
+# LOG DO PIPELINE (load)
+# =============================
+
+fim = time.time()
+duracao = fim - inicio
+
+# pega número de registros da tabela principal
+fact_all_path = tables_to_load['fact_all']
+registros = pd.read_parquet(fact_all_path).shape[0]
+
+log_file = f"{BASE_DIR}/logs_pipeline.csv"
+
+log = [
+    datetime.now(),   # data_execucao
+    "load",           # camada
+    "sucesso",        # status
+    round(duracao, 2),
+    registros
+]
+
+with open(log_file, "a", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(log)
+
+print("Log registrado no arquivo logs_pipeline.csv")
 
 # ---
 # 

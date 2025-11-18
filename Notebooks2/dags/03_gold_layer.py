@@ -23,6 +23,12 @@
 
 import pandas as pd
 import os
+from datetime import datetime
+import time
+import csv
+
+# medir tempo
+inicio = time.time()
 
 # Definindo o diretório base para os dados (deve ser o mesmo dos scripts anteriores)
 BASE_DIR = "/opt/airflow/dags"
@@ -352,7 +358,30 @@ metrics.to_parquet(f'{gold_path}metrics.parquet', index=False)
 
 print("Tabelas salvas na camada Gold.")
 
+# =============================
+# LOG DO PIPELINE (gold)
+# =============================
 
+fim = time.time()
+duracao = fim - inicio
+registros = df_clean.shape[0]
+
+log_file = f"{BASE_DIR}/logs_pipeline.csv"
+
+log = [
+    datetime.now(),   # data_execucao
+    "gold",         # camada
+    "sucesso",        # status
+    round(duracao, 2),
+    registros
+]
+
+# salva o log
+with open(log_file, "a", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(log)
+
+print("Log registrado no arquivo logs_pipeline.csv")
 # ### Salvamento na Camada Gold
 # 
 # Todas as tabelas dimensionais, fatos e métricas agregadas são salvas em formato Parquet na camada Gold. Estes arquivos estão prontos para serem carregados em um banco de dados ou ferramenta de visualização.
