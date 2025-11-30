@@ -330,20 +330,6 @@ metrics = pd.DataFrame({
 # 
 # Exibimos as métricas calculadas em formato tabular para validação e análise preliminar.
 
-# # 3. Carregando dados na camada gold
-
-# In[5]:
-dim_country = dim_country.drop(columns=['CountryID'])
-fact_all = fact_all.drop(columns=['CountryID'])
-dim_country.columns = dim_country.columns.str.lower()
-dim_date.columns = dim_date.columns.str.lower()
-dim_customer.columns = dim_customer.columns.str.lower()
-dim_product.columns = dim_product.columns.str.lower()
-fact_all.columns = fact_all.columns.str.lower()
-rfm.columns = rfm.columns.str.lower()
-most_purchased_products.columns = most_purchased_products.columns.str.lower()
-metrics.columns = metrics.columns.str.lower()
-
 # Salvar tabelas finais (camada Gold)
 gold_path = f'{DATA_PATH}/gold/'
 
