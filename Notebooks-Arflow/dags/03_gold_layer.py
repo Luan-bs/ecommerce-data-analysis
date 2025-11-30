@@ -1,25 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Camada Gold - Modelagem Dimensional e Métricas
-# 
-# Este notebook implementa a **terceira camada do pipeline** (Gold Layer), onde criamos um modelo dimensional (star schema) e calculamos métricas de negócio.
-# 
+ 
+# Este notebook implementa a **terceira camada do pipeline** (Gold Layer), 
+# onde criamos um modelo dimensional (star schema) e calculamos métricas de negócio.
+ 
 # ## Objetivos:
 # - Criar tabelas de dimensão (clientes, produtos, países, datas)
 # - Criar tabelas fato separadas (vendas, tarifas, cancelamentos)
 # - Calcular métricas agregadas e análises avançadas (RFM, produtos mais vendidos)
 # - Preparar dados otimizados para análise e consultas
-# 
-# ## Modelo:
-# Implementamos um modelo dimensional estrela (star schema) com dimensões desnormalizadas para melhor performance analítica.
-
-# # 1. Separando dados em Fato e Dimensão 
-# 
-
-
-# In[1]:
-
+ 
+# Implementamos um modelo dimensional estrela (star schema) 
+# com dimensões desnormalizadas para melhor performance analítica.
 
 import pandas as pd
 import os
