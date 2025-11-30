@@ -1,5 +1,5 @@
 
-# 🔗 **Dashboard:** [Link para o Dashboard](ukretaildash-9uxkk8yd.manus.space)
+🔗 **Dashboard:** [Link para o Dashboard](ukretaildash-9uxkk8yd.manus.space)
 
 
 
